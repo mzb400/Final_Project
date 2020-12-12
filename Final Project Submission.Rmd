@@ -1,0 +1,151 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(DataComputing)
+library(readr)
+library(plyr)
+library(ggplot2)
+library(ggmap)
+library(maps)
+library(mapdata)
+library(dplyr)
+library(tidyr)
+library(party)
+library(lubridate)
+data("ZipGeography")
+
+
+View(ZipGeography)
+
+US_Deaths <- read.csv("US_Deaths.csv")
+
+US_Confirmed <- read.csv("US_Confirmed.csv")
+
+US_Confirmed_Shifted <- read.csv("US_Confirmed_Shifted.csv")
+
+US_Deaths_Shifted <- read.csv("US_Deaths_Shifted.csv")
+
+str(US_Deaths)
+
+str(US_Confirmed)
+
+
+```
+
+### Guiding Question & Purpose
+My guiding question changed a slight bit over the course of doing this final project, but I really want to now focus on the change in covid cases and deaths in State College and other cities with PSU Campuses. This can lead us to many conclusions and can help us make lasting decisions on procedures for stopping the spread of it.
+
+The best part of this dataset is that it is extremely recent so it gives us a good idea of what is going on currently.
+
+### Challenge Encountered
+A huge problem I encountered in the beginning was my csv files were formatted in a weird way and it took me multiple hours to figure out how to fix them in Excel. 
+
+Another huge problem that I am still having that I hope to have an idea how to do by submission deadline would be to make the geom_point change sizes depending on the number of occurances in the final graphs.
+
+Lastly, another challege that I hope to overcome would be using multiple lines, each a different color based on the campus, and showing the line of confirmed cases and deaths. 
+
+### Key Visualization
+```{r}
+Zip1 <-
+  ZipGeography %>%
+  filter(State == 'Pennsylvania') %>%
+  filter(ZIP == '15061'|ZIP == '19001'|ZIP == '16510'|ZIP == '19610'|ZIP == '17013'|ZIP == '15456'|ZIP == '19355'|ZIP == '18034'|ZIP == '17972'|ZIP == '16801'|ZIP == '17403') %>%
+  
+  select(Population, CityName, County, ZIP, Latitude, Longitude) %>%
+  mutate(total = sum(Population))
+Zip1
+
+ZipSpread <- 
+  Zip1 %>%
+  spread(key = County, value = Population, fill = 0)
+ZipSpread
+
+ZipCounties <-
+  Zip1 %>%
+  select(County)
+
+ZipLatLong <-
+  Zip1 %>%
+  mutate(Campus = County) %>%
+  select(Campus, Latitude, Longitude)
+
+US_Deaths_Shifted2 <- merge(US_Deaths_Shifted, ZipLatLong, by = 'Campus')
+US_Deaths_Shifted2
+
+US_Confirmed_Shifted2 <- merge(US_Confirmed_Shifted, ZipLatLong, by = 'Campus')
+US_Confirmed_Shifted2
+
+```
+The first data frame shown is our ZipGeography data imported in which has been modified using filter(),select(), and mutate() functions to clean the data and only include data from where the PSU campuses are located. 
+
+My second data frame shows the use of the spread() command which would allow me to make each county its own column which could help in future scenarios if a join is needed.
+
+The third data frame shown is our US_Deaths data frame that has been shifted and modified in Excel to only include deaths from the PSU campuses and allow us to merge the latitude and longitude to it.
+
+Our fourth data frame shown is our US_Confirmed data frame that was shifted and modified in Excel just like the US_Deaths data frame and allow us to merge the latitude and longitude to it.
+
+
+```{r}
+Total <- right_join(US_Confirmed, US_Deaths, by = 'Date')
+Total %>%
+  pivot_longer(!Date,names_to = 'Location', values_to = 'Value')
+  
+
+```
+This is our US_Confirmed and US_Deaths data tables merged together in a right join, joined by the column Date. Also I used pivot_longer to make the locations all in one column.
+
+```{r}
+
+US_Deaths_Shifted2 %>% 
+  ggplot(aes(x = Longitude, y = Latitude)) + 
+  geom_point(aes(color = Campus) ) + 
+  theme(legend.position = "top")
+
+```
+This is basically a map of PA and where the campuses lie in respect to Pennsylvania. This will help when i give a visualization of the confirmed cases vs deaths. Then we can compare campuses with the cases.
+
+
+```{r}
+Plot1 <- US_Confirmed %>%
+  ggplot( aes(x=Date, y=Beaver)) +
+    geom_histogram( alpha=1, stat = 'identity')+
+  xlab('Date From 1/23/2020 to 12/5/2020')
+Plot1
+
+
+Plot2 <- US_Deaths %>%
+  ggplot( aes(x=Date, y=Beaver)) +
+    geom_histogram( alpha=1, stat = 'identity')+
+  xlab('Date From 1/23/2020 to 12/5/2020')
+Plot2
+
+```
+
+
+
+
+```{r}
+
+Plot3 <- US_Confirmed %>%
+  ggplot( aes(x=Date, y=Centre)) +
+    geom_point(stat = 'identity') +
+  xlab('Date From 1/23/2020 to 12/5/2020')
+Plot3
+
+Plot4 <- US_Deaths %>%
+  ggplot( aes(x=Date, y=Centre)) +
+    geom_point(stat = 'identity') +
+  xlab('Date From 1/23/2020 to 12/5/2020')
+Plot4
+
+
+```
+These two geom_point graphs points go hand in hand and show the difference between the amount of people that were confirmed having covid and the amount of deaths to covid from Centre county.
+
+
+
+
+
