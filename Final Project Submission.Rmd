@@ -1,5 +1,5 @@
 ---
-title: "R Notebook"
+title: "Final Project Submission"
 output: html_notebook
 ---
 
@@ -31,6 +31,8 @@ US_Deaths_Shifted <- read.csv("US_Deaths_Shifted.csv")
 str(US_Deaths)
 
 str(US_Confirmed)
+
+str(ZipGeography) 
 
 
 ```
@@ -90,8 +92,10 @@ Our fourth data frame shown is our US_Confirmed data frame that was shifted and 
 
 ```{r}
 Total <- right_join(US_Confirmed, US_Deaths, by = 'Date')
-Total %>%
-  pivot_longer(!Date,names_to = 'Location', values_to = 'Value')
+Total <-
+  Total %>%
+    pivot_longer(!Date,names_to = 'Location', values_to = 'Value')
+Total
   
 
 ```
@@ -146,6 +150,44 @@ Plot4
 These two geom_point graphs points go hand in hand and show the difference between the amount of people that were confirmed having covid and the amount of deaths to covid from Centre county.
 
 ```{r}
+
+Total$Date <- as.Date(Total$Date, format = "%m/%d/%Y")
+Total_Cut <-
+  Total %>%
+  filter(Location == 'Beaver.x' | Location == 'Beaver.y' |Location == 'Centre.x' | Location == 'Centre.y')
+
+ggplot(Total_Cut, aes(x = Date, y = Value)) + 
+  geom_line(aes(color = Location))
+
+
+
+```
+This graph takes two of the popular campuses being Beaver and the University Park and graphs the Beaver.x being the confirmed cases, and the Beaver.y being the deaths, and the same case for Centre county. This plot uses the joined table and displays 3 variables on one graph.
+
+```{r}
+Sum_Confirmed <-
+  US_Confirmed %>%
+  mutate(totalBeaver = sum(Beaver)) %>%
+  mutate(totalCentre = sum(Centre)) %>%
+  select(Date, totalBeaver, totalCentre) %>%
+  pivot_longer(!Date,names_to = 'Location', values_to = 'Value') %>%
+  head(2)
+Sum_Confirmed
+
+
+ggplot(Sum_Confirmed, aes(x = Value)) +
+geom_histogram() +
+geom_point(aes(y = Location)) + 
+facet_wrap(~Location) +
+xlim(3000,8000)
+
+
+
+```
+This shows the total confirmed cases for Beaver and Centre county as a bar on a value chart. We can see Beaver is around 4800 which is a lot of cases, and Centre is around 6700 which is also a lot of cases.
+
+
+```{r}
 Narrow_Confirmed <-
   US_Confirmed %>%
   pivot_longer(!Date,names_to = 'Location', values_to = 'Value')
@@ -170,7 +212,7 @@ This graph shown shows first the number of cases that were confirmed for each lo
 
 
 ### Key insight/takeaway about research question
-The key insight from this is shown throughout all of these graphs. We can see now that most of these confirmed cases are not turning into many deaths with a few small exceptions like Montgomery around the time of May and most of the campuses having a rise of deaths around May. We see a huge rise in cases at the start of December, but if we look at the deaths, there is barely any at the start of December, so this leads me to conclude that treatment and procedures for the virus have gotten much better. There is evidence that shows that there is a huge increase in the number of confirmed cases which shows us that although there is better treatment and procedures for the virus, the quarantining has not been going well, and more and more cases are present which shows that a whole new wave of COVID cases is showing up. So at the end of the day, our conclusion should be that we need to quarantine better and make these lines go in a downward direction.
+The key insight from this is shown throughout all of these graphs. We can see now that most of these confirmed cases are not turning into many deaths with a few small exceptions like Montgomery county around the time of May and most of the campuses having a rise of deaths around May. We see a huge rise in cases at the start of December, but if we look at the deaths, there is barely any at the start of December, so this leads me to conclude that treatment and procedures for the virus have gotten much better. There is evidence that shows that there is a huge increase in the number of confirmed cases which shows us that although there is better treatment and procedures for the virus, the quarantining has not been going well, and more and more cases are present which shows that a whole new wave of COVID cases is showing up. So at the end of the day, our conclusion should be that we need to quarantine better and make these lines go in a downward direction because we see a huge wave of new cases coming in especially in certain campuses. This suggests certain campuses are worse off than other, or the counties have a larger population. Nonetheless, the answer to our problems is safer procedures such as quarantine better, and making sure college students are more safe to decrease the severity of the new cases.
 
 
 
