@@ -145,6 +145,34 @@ Plot4
 ```
 These two geom_point graphs points go hand in hand and show the difference between the amount of people that were confirmed having covid and the amount of deaths to covid from Centre county.
 
+```{r}
+Narrow_Confirmed <-
+  US_Confirmed %>%
+  pivot_longer(!Date,names_to = 'Location', values_to = 'Value')
+
+Narrow_Deaths <-
+  US_Deaths %>%
+  pivot_longer(!Date,names_to = 'Location', values_to = 'Value')
+
+Narrow_Confirmed$Date <- as.Date(Narrow_Confirmed$Date, format = "%m/%d/%Y")
+Narrow_Deaths$Date <- as.Date(Narrow_Deaths$Date, format = "%m/%d/%Y")
+
+
+ggplot(Narrow_Confirmed,aes(x = Date, y=Value)) +
+  geom_line(aes(color = Location))
+
+ggplot(Narrow_Deaths,aes(x = Date, y=Value)) +
+  geom_line(aes(color = Location))
+
+
+```
+This graph shown shows first the number of cases that were confirmed for each location, while the second shows the deaths for each location. Although messy, when comparing the two, it is really helpful to show the relationship between confirmed cases and deaths.
+
+
+### Key insight/takeaway about research question
+The key insight from this is shown throughout all of these graphs. We can see now that most of these confirmed cases are not turning into many deaths with a few small exceptions like Montgomery around the time of May and most of the campuses having a rise of deaths around May. We see a huge rise in cases at the start of December, but if we look at the deaths, there is barely any at the start of December, so this leads me to conclude that treatment and procedures for the virus have gotten much better. There is evidence that shows that there is a huge increase in the number of confirmed cases which shows us that although there is better treatment and procedures for the virus, the quarantining has not been going well, and more and more cases are present which shows that a whole new wave of COVID cases is showing up. So at the end of the day, our conclusion should be that we need to quarantine better and make these lines go in a downward direction.
+
+
 
 
 
