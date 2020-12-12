@@ -228,36 +228,113 @@ summary {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShEYXRhQ29tcHV0aW5nKVxubGlicmFyeShyZWFkcilcbmxpYnJhcnkocGx5cilcbmxpYnJhcnkoZ2dwbG90MilcbmxpYnJhcnkoZ2dtYXApXG5saWJyYXJ5KG1hcHMpXG5saWJyYXJ5KG1hcGRhdGEpXG5saWJyYXJ5KGRwbHlyKVxubGlicmFyeSh0aWR5cilcbmxpYnJhcnkocGFydHkpXG5saWJyYXJ5KGx1YnJpZGF0ZSlcbmRhdGEoXCJaaXBHZW9ncmFwaHlcIilcblxuXG5WaWV3KFppcEdlb2dyYXBoeSlcblxuVVNfRGVhdGhzIDwtIHJlYWQuY3N2KFwiVVNfRGVhdGhzLmNzdlwiKVxuXG5VU19Db25maXJtZWQgPC0gcmVhZC5jc3YoXCJVU19Db25maXJtZWQuY3N2XCIpXG5cblVTX0NvbmZpcm1lZF9TaGlmdGVkIDwtIHJlYWQuY3N2KFwiVVNfQ29uZmlybWVkX1NoaWZ0ZWQuY3N2XCIpXG5cblVTX0RlYXRoc19TaGlmdGVkIDwtIHJlYWQuY3N2KFwiVVNfRGVhdGhzX1NoaWZ0ZWQuY3N2XCIpXG5cbnN0cihVU19EZWF0aHMpXG5cbnN0cihVU19Db25maXJtZWQpXG5cblxuYGBgIn0= -->
-<pre class="r"><code>library(DataComputing)
-library(readr)
-library(plyr)
-library(ggplot2)
-library(ggmap)
-library(maps)
-library(mapdata)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShEYXRhQ29tcHV0aW5nKVxuYGBgIn0= -->
+<pre class="r"><code>library(DataComputing)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBkcGx5clxuXG5BdHRhY2hpbmcgcGFja2FnZTog4oCYZHBseXLigJlcblxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOnN0YXRz4oCZOlxuXG4gICAgZmlsdGVyLCBsYWdcblxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOmJhc2XigJk6XG5cbiAgICBpbnRlcnNlY3QsIHNldGRpZmYsIHNldGVxdWFsLCB1bmlvblxuXG5Mb2FkaW5nIHJlcXVpcmVkIHBhY2thZ2U6IGdncGxvdDJcblVzZSBzdXBwcmVzc1BhY2thZ2VTdGFydHVwTWVzc2FnZXMoKSB0byBlbGltaW5hdGUgcGFja2FnZSBzdGFydHVwIG1lc3NhZ2VzXG4ifQ== -->
+<pre><code>Loading required package: dplyr
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Loading required package: ggplot2
+Use suppressPackageStartupMessages() to eliminate package startup messages</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShyZWFkcilcbmxpYnJhcnkocGx5cilcbmBgYCJ9 -->
+<pre class="r"><code>library(readr)
+library(plyr)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5Zb3UgaGF2ZSBsb2FkZWQgcGx5ciBhZnRlciBkcGx5ciAtIHRoaXMgaXMgbGlrZWx5IHRvIGNhdXNlIHByb2JsZW1zLlxuSWYgeW91IG5lZWQgZnVuY3Rpb25zIGZyb20gYm90aCBwbHlyIGFuZCBkcGx5ciwgcGxlYXNlIGxvYWQgcGx5ciBmaXJzdCwgdGhlbiBkcGx5cjpcbmxpYnJhcnkocGx5cik7IGxpYnJhcnkoZHBseXIpXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cblxuQXR0YWNoaW5nIHBhY2thZ2U6IOKAmHBseXLigJlcblxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOmRwbHly4oCZOlxuXG4gICAgYXJyYW5nZSwgY291bnQsIGRlc2MsIGZhaWx3aXRoLCBpZCwgbXV0YXRlLCByZW5hbWUsIHN1bW1hcmlzZSwgc3VtbWFyaXplXG4ifQ== -->
+<pre><code>---------------------------------------------------------------------------------------------------------------------------------
+You have loaded plyr after dplyr - this is likely to cause problems.
+If you need functions from both plyr and dplyr, please load plyr first, then dplyr:
+library(plyr); library(dplyr)
+---------------------------------------------------------------------------------------------------------------------------------
+
+Attaching package: ‘plyr’
+
+The following objects are masked from ‘package:dplyr’:
+
+    arrange, count, desc, failwith, id, mutate, rename, summarise, summarize</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShnZ3Bsb3QyKVxubGlicmFyeShnZ21hcClcbmBgYCJ9 -->
+<pre class="r"><code>library(ggplot2)
+library(ggmap)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiR29vZ2xlIE1hcHMgQVBJIFRlcm1zIG9mIFNlcnZpY2U6IGh0dHA6Ly9kZXZlbG9wZXJzLmdvb2dsZS5jb20vbWFwcy90ZXJtcy5cblBsZWFzZSBjaXRlIGdnbWFwIGlmIHlvdSB1c2UgaXQ6IHNlZSBjaXRhdGlvbignZ2dtYXAnKSBmb3IgZGV0YWlscy5cbiJ9 -->
+<pre><code>Google Maps API Terms of Service: http://developers.google.com/maps/terms.
+Please cite ggmap if you use it: see citation('ggmap') for details.</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShtYXBzKVxuYGBgIn0= -->
+<pre class="r"><code>library(maps)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5BdHRhY2hpbmcgcGFja2FnZTog4oCYbWFwc+KAmVxuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOnBseXLigJk6XG5cbiAgICBvem9uZVxuIn0= -->
+<pre><code>
+Attaching package: ‘maps’
+
+The following object is masked from ‘package:plyr’:
+
+    ozone</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShtYXBkYXRhKVxubGlicmFyeShkcGx5cilcbmxpYnJhcnkodGlkeXIpXG5saWJyYXJ5KHBhcnR5KVxuYGBgIn0= -->
+<pre class="r"><code>library(mapdata)
 library(dplyr)
 library(tidyr)
-library(party)
-library(lubridate)
-data(&quot;ZipGeography&quot;)
-
-
-View(ZipGeography)
-
-US_Deaths &lt;- read.csv(&quot;US_Deaths.csv&quot;)
-
-US_Confirmed &lt;- read.csv(&quot;US_Confirmed.csv&quot;)
-
-US_Confirmed_Shifted &lt;- read.csv(&quot;US_Confirmed_Shifted.csv&quot;)
-
-US_Deaths_Shifted &lt;- read.csv(&quot;US_Deaths_Shifted.csv&quot;)
-
-str(US_Deaths)
-
-str(US_Confirmed)
-</code></pre>
+library(party)</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBncmlkXG5Mb2FkaW5nIHJlcXVpcmVkIHBhY2thZ2U6IG12dG5vcm1cbkxvYWRpbmcgcmVxdWlyZWQgcGFja2FnZTogbW9kZWx0b29sc1xuTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBzdGF0czRcblxuQXR0YWNoaW5nIHBhY2thZ2U6IOKAmG1vZGVsdG9vbHPigJlcblxuVGhlIGZvbGxvd2luZyBvYmplY3QgaXMgbWFza2VkIGZyb20g4oCYcGFja2FnZTpwbHly4oCZOlxuXG4gICAgZW1wdHlcblxuTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBzdHJ1Y2NoYW5nZVxuTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiB6b29cblxuQXR0YWNoaW5nIHBhY2thZ2U6IOKAmHpvb+KAmVxuXG5UaGUgZm9sbG93aW5nIG9iamVjdHMgYXJlIG1hc2tlZCBmcm9tIOKAmHBhY2thZ2U6YmFzZeKAmTpcblxuICAgIGFzLkRhdGUsIGFzLkRhdGUubnVtZXJpY1xuXG5Mb2FkaW5nIHJlcXVpcmVkIHBhY2thZ2U6IHNhbmR3aWNoXG4ifQ== -->
+<pre><code>Loading required package: grid
+Loading required package: mvtnorm
+Loading required package: modeltools
+Loading required package: stats4
+
+Attaching package: ‘modeltools’
+
+The following object is masked from ‘package:plyr’:
+
+    empty
+
+Loading required package: strucchange
+Loading required package: zoo
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Loading required package: sandwich</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShsdWJyaWRhdGUpXG5gYGAifQ== -->
+<pre class="r"><code>library(lubridate)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5BdHRhY2hpbmcgcGFja2FnZTog4oCYbHVicmlkYXRl4oCZXG5cblRoZSBmb2xsb3dpbmcgb2JqZWN0IGlzIG1hc2tlZCBmcm9tIOKAmHBhY2thZ2U6cGx5cuKAmTpcblxuICAgIGhlcmVcblxuVGhlIGZvbGxvd2luZyBvYmplY3QgaXMgbWFza2VkIGZyb20g4oCYcGFja2FnZTpiYXNl4oCZOlxuXG4gICAgZGF0ZVxuIn0= -->
+<pre><code>
+Attaching package: ‘lubridate’
+
+The following object is masked from ‘package:plyr’:
+
+    here
+
+The following object is masked from ‘package:base’:
+
+    date</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGF0YShcIlppcEdlb2dyYXBoeVwiKVxuVmlldyhaaXBHZW9ncmFwaHkpXG5VU19EZWF0aHMgPC0gcmVhZC5jc3YoXCJVU19EZWF0aHMuY3N2XCIpXG5gYGAifQ== -->
+<pre class="r"><code>data(&quot;ZipGeography&quot;)
+View(ZipGeography)
+US_Deaths &lt;- read.csv(&quot;US_Deaths.csv&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiY2Fubm90IG9wZW4gZmlsZSAnVVNfRGVhdGhzLmNzdic6IE5vIHN1Y2ggZmlsZSBvciBkaXJlY3RvcnlFcnJvciBpbiBmaWxlKGZpbGUsIFwicnRcIikgOiBjYW5ub3Qgb3BlbiB0aGUgY29ubmVjdGlvblxuIn0= -->
+<pre><code>cannot open file 'US_Deaths.csv': No such file or directoryError in file(file, &quot;rt&quot;) : cannot open the connection</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <div id="guiding-question-purpose" class="section level3">
@@ -275,37 +352,6 @@ str(US_Confirmed)
 <h3>Key Visualization</h3>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuWmlwMSA8LVxuICBaaXBHZW9ncmFwaHkgJT4lXG4gIGZpbHRlcihTdGF0ZSA9PSAnUGVubnN5bHZhbmlhJykgJT4lXG4gIGZpbHRlcihaSVAgPT0gJzE1MDYxJ3xaSVAgPT0gJzE5MDAxJ3xaSVAgPT0gJzE2NTEwJ3xaSVAgPT0gJzE5NjEwJ3xaSVAgPT0gJzE3MDEzJ3xaSVAgPT0gJzE1NDU2J3xaSVAgPT0gJzE5MzU1J3xaSVAgPT0gJzE4MDM0J3xaSVAgPT0gJzE3OTcyJ3xaSVAgPT0gJzE2ODAxJ3xaSVAgPT0gJzE3NDAzJykgJT4lXG4gIFxuICBzZWxlY3QoUG9wdWxhdGlvbiwgQ2l0eU5hbWUsIENvdW50eSwgWklQLCBMYXRpdHVkZSwgTG9uZ2l0dWRlKSAlPiVcbiAgbXV0YXRlKHRvdGFsID0gc3VtKFBvcHVsYXRpb24pKVxuWmlwMVxuXG5aaXBTcHJlYWQgPC0gXG4gIFppcDEgJT4lXG4gIHNwcmVhZChrZXkgPSBDb3VudHksIHZhbHVlID0gUG9wdWxhdGlvbiwgZmlsbCA9IDApXG5aaXBTcHJlYWRcblxuWmlwQ291bnRpZXMgPC1cbiAgWmlwMSAlPiVcbiAgc2VsZWN0KENvdW50eSlcblxuWmlwTGF0TG9uZyA8LVxuICBaaXAxICU+JVxuICBtdXRhdGUoQ2FtcHVzID0gQ291bnR5KSAlPiVcbiAgc2VsZWN0KENhbXB1cywgTGF0aXR1ZGUsIExvbmdpdHVkZSlcblxuVVNfRGVhdGhzX1NoaWZ0ZWQyIDwtIG1lcmdlKFVTX0RlYXRoc19TaGlmdGVkLCBaaXBMYXRMb25nLCBieSA9ICdDYW1wdXMnKVxuVVNfRGVhdGhzX1NoaWZ0ZWQyXG5cblVTX0NvbmZpcm1lZF9TaGlmdGVkMiA8LSBtZXJnZShVU19Db25maXJtZWRfU2hpZnRlZCwgWmlwTGF0TG9uZywgYnkgPSAnQ2FtcHVzJylcblVTX0NvbmZpcm1lZF9TaGlmdGVkMlxuXG5gYGAifQ== -->
-<pre class="r"><code>Zip1 &lt;-
-  ZipGeography %&gt;%
-  filter(State == 'Pennsylvania') %&gt;%
-  filter(ZIP == '15061'|ZIP == '19001'|ZIP == '16510'|ZIP == '19610'|ZIP == '17013'|ZIP == '15456'|ZIP == '19355'|ZIP == '18034'|ZIP == '17972'|ZIP == '16801'|ZIP == '17403') %&gt;%
-  
-  select(Population, CityName, County, ZIP, Latitude, Longitude) %&gt;%
-  mutate(total = sum(Population))
-Zip1
-
-ZipSpread &lt;- 
-  Zip1 %&gt;%
-  spread(key = County, value = Population, fill = 0)
-ZipSpread
-
-ZipCounties &lt;-
-  Zip1 %&gt;%
-  select(County)
-
-ZipLatLong &lt;-
-  Zip1 %&gt;%
-  mutate(Campus = County) %&gt;%
-  select(Campus, Latitude, Longitude)
-
-US_Deaths_Shifted2 &lt;- merge(US_Deaths_Shifted, ZipLatLong, by = 'Campus')
-US_Deaths_Shifted2
-
-US_Confirmed_Shifted2 &lt;- merge(US_Confirmed_Shifted, ZipLatLong, by = 'Campus')
-US_Confirmed_Shifted2
-</code></pre>
-<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>The first data frame shown is our ZipGeography data imported in which has been modified using filter(),select(), and mutate() functions to clean the data and only include data from where the PSU campuses are located.</p>
@@ -314,90 +360,25 @@ US_Confirmed_Shifted2
 <p>Our fourth data frame shown is our US_Confirmed data frame that was shifted and modified in Excel just like the US_Deaths data frame and allow us to merge the latitude and longitude to it.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVG90YWwgPC0gcmlnaHRfam9pbihVU19Db25maXJtZWQsIFVTX0RlYXRocywgYnkgPSAnRGF0ZScpXG5Ub3RhbCAlPiVcbiAgcGl2b3RfbG9uZ2VyKCFEYXRlLG5hbWVzX3RvID0gJ0xvY2F0aW9uJywgdmFsdWVzX3RvID0gJ1ZhbHVlJylcbiAgXG5cbmBgYCJ9 -->
-<pre class="r"><code>Total &lt;- right_join(US_Confirmed, US_Deaths, by = 'Date')
-Total %&gt;%
-  pivot_longer(!Date,names_to = 'Location', values_to = 'Value')
-  
-</code></pre>
-<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>This is our US_Confirmed and US_Deaths data tables merged together in a right join, joined by the column Date. Also I used pivot_longer to make the locations all in one column.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5VU19EZWF0aHNfU2hpZnRlZDIgJT4lIFxuICBnZ3Bsb3QoYWVzKHggPSBMb25naXR1ZGUsIHkgPSBMYXRpdHVkZSkpICsgXG4gIGdlb21fcG9pbnQoYWVzKGNvbG9yID0gQ2FtcHVzKSApICsgXG4gIHRoZW1lKGxlZ2VuZC5wb3NpdGlvbiA9IFwidG9wXCIpXG5cbmBgYCJ9 -->
-<pre class="r"><code>
-US_Deaths_Shifted2 %&gt;% 
-  ggplot(aes(x = Longitude, y = Latitude)) + 
-  geom_point(aes(color = Campus) ) + 
-  theme(legend.position = &quot;top&quot;)
-</code></pre>
-<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>This is basically a map of PA and where the campuses lie in respect to Pennsylvania. This will help when i give a visualization of the confirmed cases vs deaths. Then we can compare campuses with the cases.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuUGxvdDEgPC0gVVNfQ29uZmlybWVkICU+JVxuICBnZ3Bsb3QoIGFlcyh4PURhdGUsIHk9QmVhdmVyKSkgK1xuICAgIGdlb21faGlzdG9ncmFtKCBhbHBoYT0xLCBzdGF0ID0gJ2lkZW50aXR5JykrXG4gIHhsYWIoJ0RhdGUgRnJvbSAxLzIzLzIwMjAgdG8gMTIvNS8yMDIwJylcblBsb3QxXG5cblxuUGxvdDIgPC0gVVNfRGVhdGhzICU+JVxuICBnZ3Bsb3QoIGFlcyh4PURhdGUsIHk9QmVhdmVyKSkgK1xuICAgIGdlb21faGlzdG9ncmFtKCBhbHBoYT0xLCBzdGF0ID0gJ2lkZW50aXR5JykrXG4gIHhsYWIoJ0RhdGUgRnJvbSAxLzIzLzIwMjAgdG8gMTIvNS8yMDIwJylcblBsb3QyXG5cbmBgYCJ9 -->
-<pre class="r"><code>Plot1 &lt;- US_Confirmed %&gt;%
-  ggplot( aes(x=Date, y=Beaver)) +
-    geom_histogram( alpha=1, stat = 'identity')+
-  xlab('Date From 1/23/2020 to 12/5/2020')
-Plot1
-
-
-Plot2 &lt;- US_Deaths %&gt;%
-  ggplot( aes(x=Date, y=Beaver)) +
-    geom_histogram( alpha=1, stat = 'identity')+
-  xlab('Date From 1/23/2020 to 12/5/2020')
-Plot2
-</code></pre>
-<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5QbG90MyA8LSBVU19Db25maXJtZWQgJT4lXG4gIGdncGxvdCggYWVzKHg9RGF0ZSwgeT1DZW50cmUpKSArXG4gICAgZ2VvbV9wb2ludChzdGF0ID0gJ2lkZW50aXR5JykgK1xuICB4bGFiKCdEYXRlIEZyb20gMS8yMy8yMDIwIHRvIDEyLzUvMjAyMCcpXG5QbG90M1xuXG5QbG90NCA8LSBVU19EZWF0aHMgJT4lXG4gIGdncGxvdCggYWVzKHg9RGF0ZSwgeT1DZW50cmUpKSArXG4gICAgZ2VvbV9wb2ludChzdGF0ID0gJ2lkZW50aXR5JykgK1xuICB4bGFiKCdEYXRlIEZyb20gMS8yMy8yMDIwIHRvIDEyLzUvMjAyMCcpXG5QbG90NFxuXG5cbmBgYCJ9 -->
-<pre class="r"><code>
-Plot3 &lt;- US_Confirmed %&gt;%
-  ggplot( aes(x=Date, y=Centre)) +
-    geom_point(stat = 'identity') +
-  xlab('Date From 1/23/2020 to 12/5/2020')
-Plot3
-
-Plot4 &lt;- US_Deaths %&gt;%
-  ggplot( aes(x=Date, y=Centre)) +
-    geom_point(stat = 'identity') +
-  xlab('Date From 1/23/2020 to 12/5/2020')
-Plot4
-</code></pre>
-<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>These two geom_point graphs points go hand in hand and show the difference between the amount of people that were confirmed having covid and the amount of deaths to covid from Centre county.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTmFycm93X0NvbmZpcm1lZCA8LVxuICBVU19Db25maXJtZWQgJT4lXG4gIHBpdm90X2xvbmdlcighRGF0ZSxuYW1lc190byA9ICdMb2NhdGlvbicsIHZhbHVlc190byA9ICdWYWx1ZScpXG5cbk5hcnJvd19EZWF0aHMgPC1cbiAgVVNfRGVhdGhzICU+JVxuICBwaXZvdF9sb25nZXIoIURhdGUsbmFtZXNfdG8gPSAnTG9jYXRpb24nLCB2YWx1ZXNfdG8gPSAnVmFsdWUnKVxuXG5OYXJyb3dfQ29uZmlybWVkJERhdGUgPC0gYXMuRGF0ZShOYXJyb3dfQ29uZmlybWVkJERhdGUsIGZvcm1hdCA9IFwiJW0vJWQvJVlcIilcbk5hcnJvd19EZWF0aHMkRGF0ZSA8LSBhcy5EYXRlKE5hcnJvd19EZWF0aHMkRGF0ZSwgZm9ybWF0ID0gXCIlbS8lZC8lWVwiKVxuXG5cbmdncGxvdChOYXJyb3dfQ29uZmlybWVkLGFlcyh4ID0gRGF0ZSwgeT1WYWx1ZSkpICtcbiAgZ2VvbV9saW5lKGFlcyhjb2xvciA9IExvY2F0aW9uKSlcblxuZ2dwbG90KE5hcnJvd19EZWF0aHMsYWVzKHggPSBEYXRlLCB5PVZhbHVlKSkgK1xuICBnZW9tX2xpbmUoYWVzKGNvbG9yID0gTG9jYXRpb24pKVxuXG5cbmBgYCJ9 -->
-<pre class="r"><code>Narrow_Confirmed &lt;-
-  US_Confirmed %&gt;%
-  pivot_longer(!Date,names_to = 'Location', values_to = 'Value')
-
-Narrow_Deaths &lt;-
-  US_Deaths %&gt;%
-  pivot_longer(!Date,names_to = 'Location', values_to = 'Value')
-
-Narrow_Confirmed$Date &lt;- as.Date(Narrow_Confirmed$Date, format = &quot;%m/%d/%Y&quot;)
-Narrow_Deaths$Date &lt;- as.Date(Narrow_Deaths$Date, format = &quot;%m/%d/%Y&quot;)
-
-
-ggplot(Narrow_Confirmed,aes(x = Date, y=Value)) +
-  geom_line(aes(color = Location))
-
-ggplot(Narrow_Deaths,aes(x = Date, y=Value)) +
-  geom_line(aes(color = Location))
-</code></pre>
-<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>This graph shown shows first the number of cases that were confirmed for each location, while the second shows the deaths for each location. Although messy, when comparing the two, it is really helpful to show the relationship between confirmed cases and deaths.</p>
