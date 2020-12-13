@@ -1,37 +1,215 @@
-## Welcome to GitHub Pages
+---
+title: "Final Project Submission"
+output: html_notebook
+---
 
-You can use the [editor on GitHub](https://github.com/mzb400/Final_Project/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+```{r}
+library(DataComputing)
+library(readr)
+library(plyr)
+library(ggplot2)
+library(ggmap)
+library(maps)
+library(mapdata)
+library(dplyr)
+library(tidyr)
+library(party)
+library(lubridate)
+data("ZipGeography")
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
-### Markdown
+View(ZipGeography)
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+US_Deaths <- read.csv("US_Deaths.csv")
 
-```markdown
-Syntax highlighted code block
+US_Confirmed <- read.csv("US_Confirmed.csv")
 
-# Header 1
-## Header 2
-### Header 3
+US_Confirmed_Shifted <- read.csv("US_Confirmed_Shifted.csv")
 
-- Bulleted
-- List
+US_Deaths_Shifted <- read.csv("US_Deaths_Shifted.csv")
 
-1. Numbered
-2. List
+str(US_Deaths)
 
-**Bold** and _Italic_ and `Code` text
+str(US_Confirmed)
 
-[Link](url) and ![Image](src)
+str(ZipGeography) 
+
+
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+### Guiding Question & Purpose
+My guiding question changed a slight bit over the course of doing this final project, but I really want to now focus on the change in covid cases and deaths in State College and other cities with PSU Campuses. This can lead us to many conclusions and can help us make lasting decisions on procedures for stopping the spread of it.
 
-### Jekyll Themes
+The best part of this dataset is that it is extremely recent so it gives us a good idea of what is going on currently.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/mzb400/Final_Project/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+### Challenge Encountered
+A huge problem I encountered in the beginning was my csv files were formatted in a weird way and it took me multiple hours to figure out how to fix them in Excel. 
 
-### Support or Contact
+Another huge problem that I am still having that I hope to have an idea how to do by submission deadline would be to make the geom_point change sizes depending on the number of occurances in the final graphs.
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+Lastly, another challege that I hope to overcome would be using multiple lines, each a different color based on the campus, and showing the line of confirmed cases and deaths. 
+
+### Key Visualization
+```{r}
+Zip1 <-
+  ZipGeography %>%
+  filter(State == 'Pennsylvania') %>%
+  filter(ZIP == '15061'|ZIP == '19001'|ZIP == '16510'|ZIP == '19610'|ZIP == '17013'|ZIP == '15456'|ZIP == '19355'|ZIP == '18034'|ZIP == '17972'|ZIP == '16801'|ZIP == '17403') %>%
+  
+  select(Population, CityName, County, ZIP, Latitude, Longitude) %>%
+  mutate(total = sum(Population))
+Zip1
+
+ZipSpread <- 
+  Zip1 %>%
+  spread(key = County, value = Population, fill = 0)
+ZipSpread
+
+ZipCounties <-
+  Zip1 %>%
+  select(County)
+
+ZipLatLong <-
+  Zip1 %>%
+  mutate(Campus = County) %>%
+  select(Campus, Latitude, Longitude)
+
+US_Deaths_Shifted2 <- merge(US_Deaths_Shifted, ZipLatLong, by = 'Campus')
+US_Deaths_Shifted2
+
+US_Confirmed_Shifted2 <- merge(US_Confirmed_Shifted, ZipLatLong, by = 'Campus')
+US_Confirmed_Shifted2
+
+```
+The first data frame shown is our ZipGeography data imported in which has been modified using filter(),select(), and mutate() functions to clean the data and only include data from where the PSU campuses are located. 
+
+My second data frame shows the use of the spread() command which would allow me to make each county its own column which could help in future scenarios if a join is needed.
+
+The third data frame shown is our US_Deaths data frame that has been shifted and modified in Excel to only include deaths from the PSU campuses and allow us to merge the latitude and longitude to it.
+
+Our fourth data frame shown is our US_Confirmed data frame that was shifted and modified in Excel just like the US_Deaths data frame and allow us to merge the latitude and longitude to it.
+
+
+```{r}
+Total <- right_join(US_Confirmed, US_Deaths, by = 'Date')
+Total <-
+  Total %>%
+    pivot_longer(!Date,names_to = 'Location', values_to = 'Value')
+Total
+  
+
+```
+This is our US_Confirmed and US_Deaths data tables merged together in a right join, joined by the column Date. Also I used pivot_longer to make the locations all in one column.
+
+```{r}
+
+US_Deaths_Shifted2 %>% 
+  ggplot(aes(x = Longitude, y = Latitude)) + 
+  geom_point(aes(color = Campus) ) + 
+  theme(legend.position = "top")
+
+```
+This is basically a map of PA and where the campuses lie in respect to Pennsylvania. This will help when i give a visualization of the confirmed cases vs deaths. Then we can compare campuses with the cases.
+
+
+```{r}
+Plot1 <- US_Confirmed %>%
+  ggplot( aes(x=Date, y=Beaver)) +
+    geom_histogram( alpha=1, stat = 'identity')+
+  xlab('Date From 1/23/2020 to 12/5/2020')
+Plot1
+
+
+Plot2 <- US_Deaths %>%
+  ggplot( aes(x=Date, y=Beaver)) +
+    geom_histogram( alpha=1, stat = 'identity')+
+  xlab('Date From 1/23/2020 to 12/5/2020')
+Plot2
+
+```
+
+
+
+
+```{r}
+
+Plot3 <- US_Confirmed %>%
+  ggplot( aes(x=Date, y=Centre)) +
+    geom_point(stat = 'identity') +
+  xlab('Date From 1/23/2020 to 12/5/2020')
+Plot3
+
+Plot4 <- US_Deaths %>%
+  ggplot( aes(x=Date, y=Centre)) +
+    geom_point(stat = 'identity') +
+  xlab('Date From 1/23/2020 to 12/5/2020')
+Plot4
+
+
+```
+These two geom_point graphs points go hand in hand and show the difference between the amount of people that were confirmed having covid and the amount of deaths to covid from Centre county.
+
+```{r}
+
+Total$Date <- as.Date(Total$Date, format = "%m/%d/%Y")
+Total_Cut <-
+  Total %>%
+  filter(Location == 'Beaver.x' | Location == 'Beaver.y' |Location == 'Centre.x' | Location == 'Centre.y')
+
+ggplot(Total_Cut, aes(x = Date, y = Value)) + 
+  geom_line(aes(color = Location))
+
+
+
+```
+This graph takes two of the popular campuses being Beaver and the University Park and graphs the Beaver.x being the confirmed cases, and the Beaver.y being the deaths, and the same case for Centre county. This plot uses the joined table and displays 3 variables on one graph.
+
+```{r}
+Sum_Confirmed <-
+  US_Confirmed %>%
+  mutate(totalBeaver = sum(Beaver)) %>%
+  mutate(totalCentre = sum(Centre)) %>%
+  select(Date, totalBeaver, totalCentre) %>%
+  pivot_longer(!Date,names_to = 'Location', values_to = 'Value') %>%
+  head(2)
+Sum_Confirmed
+
+
+ggplot(Sum_Confirmed, aes(x = Value)) +
+geom_histogram() +
+geom_point(aes(y = Location)) + 
+facet_wrap(~Location) +
+xlim(3000,8000)
+
+
+
+```
+This shows the total confirmed cases for Beaver and Centre county as a bar on a value chart. We can see Beaver is around 4800 which is a lot of cases, and Centre is around 6700 which is also a lot of cases.
+
+
+```{r}
+Narrow_Confirmed <-
+  US_Confirmed %>%
+  pivot_longer(!Date,names_to = 'Location', values_to = 'Value')
+
+Narrow_Deaths <-
+  US_Deaths %>%
+  pivot_longer(!Date,names_to = 'Location', values_to = 'Value')
+
+Narrow_Confirmed$Date <- as.Date(Narrow_Confirmed$Date, format = "%m/%d/%Y")
+Narrow_Deaths$Date <- as.Date(Narrow_Deaths$Date, format = "%m/%d/%Y")
+
+
+ggplot(Narrow_Confirmed,aes(x = Date, y=Value)) +
+  geom_line(aes(color = Location))
+
+ggplot(Narrow_Deaths,aes(x = Date, y=Value)) +
+  geom_line(aes(color = Location))
+
+
+```
+This graph shown shows first the number of cases that were confirmed for each location, while the second shows the deaths for each location. Although messy, when comparing the two, it is really helpful to show the relationship between confirmed cases and deaths.
+
+
+### Key insight/takeaway about research question
+The key insight from this is shown throughout all of these graphs. We can see now that most of these confirmed cases are not turning into many deaths with a few small exceptions like Montgomery county around the time of May and most of the campuses having a rise of deaths around May. We see a huge rise in cases at the start of December, but if we look at the deaths, there is barely any at the start of December, so this leads me to conclude that treatment and procedures for the virus have gotten much better. There is evidence that shows that there is a huge increase in the number of confirmed cases which shows us that although there is better treatment and procedures for the virus, the quarantining has not been going well, and more and more cases are present which shows that a whole new wave of COVID cases is showing up. So at the end of the day, our conclusion should be that we need to quarantine better and make these lines go in a downward direction because we see a huge wave of new cases coming in especially in certain campuses. This suggests certain campuses are worse off than other, or the counties have a larger population. Nonetheless, the answer to our problems is safer procedures such as quarantine better, and making sure college students are more safe to decrease the severity of the new cases.
